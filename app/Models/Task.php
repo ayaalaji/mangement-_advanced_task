@@ -37,14 +37,17 @@ class Task extends Model
             }
         });
     }
+
     public function user()
     {
         $this->belongsTo(User::class ,'assigned_to');
     }
+
     public function attachements()
     {
         return $this->morphMany(Attachement::class, 'attachable');
     }
+
     public function statusUpdates()
     {
         return $this->hasMany(TaskStatusUpdate::class);
@@ -58,6 +61,11 @@ class Task extends Model
     public function dependents()
     {
         return $this->hasMany(Dependency::class, 'depends_on_task_id');
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class , 'commentable');
     }
 
     public function isBlocked()
@@ -76,7 +84,7 @@ class Task extends Model
         if ($this->isBlocked()) {
             $this->update(['status' => 'blocked']);
         } else {
-            $this->update(['status' => 'open']); // أو الحالة المناسبة الأخرى
+            $this->update(['status' => 'open']); 
         }
     }
 

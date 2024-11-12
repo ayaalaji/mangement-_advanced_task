@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
-class taskService {
+class TaskService {
     /**
      * Display a listing of Tasks.
      * admin can see all tasks ، and manager can see the task that he managed it 

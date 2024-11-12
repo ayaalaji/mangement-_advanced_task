@@ -12,7 +12,9 @@ Advanced Task Management System
    4. php artisan db:seed --class=UserSeeder
    5. php artisan cache:table
 # Features
-i use JWT package for Api   
+i use JWT package for Api  
+i do testing code for Task ( for all crud and also for soft delete and reStore task)
+to test it you must to write in terminal (php artisan test) 
 # what about this project
 This project is about advanced task management.
  there are three roles: admin, manager, and user. 

@@ -8,12 +8,12 @@ use App\Http\Requests\Task\StoreRequest;
 use App\Http\Requests\Task\UpdateDependencyRequest;
 use App\Http\Requests\Task\UpdateRequest;
 use App\Models\Task;
-use App\Services\taskService;
+use App\Services\TaskService;
 
 class TaskController extends Controller
 {
     protected $taskService;
-    public function __construct(taskService $taskService)
+    public function __construct(TaskService $taskService)
     {
         $this->middleware('auth:api');
         $this->middleware('security');

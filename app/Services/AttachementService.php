@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class AttachementService {
     /**
      * admin and manager and user can see all attachement.
-     * but manager who type in task == manages_type
+     * but manager appear the tasks which manager add attachement to it
      * and user can see only task he worked it and have an attachement
      * @param Task $task
      */
@@ -22,15 +22,13 @@ class AttachementService {
         try {
             $user = Auth::user();
             if ($user->role === 'admin') {
-                return Attachement::where('attachable_type', Task::class)
-                    ->where('attachable_id', $task->id)
-                    ->get();
+                return Attachement::all();
+            //appear the tasks which manager add attachement to it        
             } elseif ($user->role === 'manager') {
-                return Attachement::where('attachable_type', Task::class)
-                    ->where('attachable_id', $task->id)
-                    ->whereHas('attachable', function ($query) {
-                        $query->where('type', Auth::user()->manages_type);
-                    })->get();
+                return Attachement::where('user_id', $user->id)
+                    ->get();
+                    
+            //User sees attachments only if the task is assigned to them        
             } elseif ($user->role === 'user') {
                 return Attachement::where('attachable_type', Task::class)
                     ->where('attachable_id', $task->id)
@@ -58,19 +56,24 @@ class AttachementService {
             $fileName = time() . '.' . $file_path->getClientOriginalExtension();
             $file_path->move(public_path('attachments'), $fileName);
 
-            
-            $attach =  Attachement::create([
-                'file_path' => 'attachments/' . $fileName,
-                'attachable_id' => $task->id, 
-                'attachable_type' => Task::class, 
-                'user_id' => $user->id
-            ]);
-            
-            
-           $attach->attachable()->associate($task);
-           $attach->save();
+            if($user->manages_type == $task->type && $task->status !='blocked') 
+            {
 
-            return $attach;
+                $attach =  Attachement::create([
+                    'file_path' => 'attachments/' . $fileName,
+                    'attachable_id' => $task->id, 
+                    'attachable_type' => Task::class, 
+                    'user_id' => $user->id
+                ]);
+                
+                
+               $attach->attachable()->associate($task);
+               $attach->save();
+    
+                return $attach;
+            } else {
+                return false;
+            }
         } catch (Exception $th) {
             Log::error($th);
             throw new Exception('You cannot add the Attachments.');

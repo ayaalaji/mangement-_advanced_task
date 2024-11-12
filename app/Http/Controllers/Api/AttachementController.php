@@ -30,6 +30,7 @@ class AttachementController extends Controller
     public function index(Task $task)
     {
         $attachs = $this->attachementService->getAllAttachements($task);
+        
         return $this->success($attachs, 'This is all Attachments');
     }
 
@@ -46,7 +47,7 @@ class AttachementController extends Controller
 
         $attach = $this->attachementService->createAttachement($validatedData, $task);
         if ($attach === false) {
-            return $this->error('Cannot add attachment to a task that is blocked.');
+            return $this->error('Cannot add attachment to a task .');
         }
 
         return $this->success($attach, 'You Created Attachment Successfully', 201);

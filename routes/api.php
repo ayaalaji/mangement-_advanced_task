@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AttachementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\DependencyController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\TaskController;
@@ -27,10 +28,17 @@ Route::controller(TaskController::class)->group(function () {
     Route::delete('task/{task}','forceDelete');
 });
 
-Route::prefix('tasks/{task}/attachments')->group(function () {
-    Route::get('/', [AttachementController::class, 'index']); 
-    Route::post('/', [AttachementController::class, 'store']); 
-    Route::post('/{attachment}', [AttachementController::class, 'update']); 
-    Route::delete('/{attachment}', [AttachementController::class, 'destroy']); 
+
+Route::controller(AttachementController::class)->group(function () {
+    Route::get('tasks/attachements','index'); 
+    Route::post('tasks/{task}/attachements','store'); 
+    Route::post('tasks/{task}/attachements/{attachment}','update'); 
+    Route::delete('tasks/{task}/attachements/{attachment}','destroy'); 
 });
 Route::post('tasks/dependencies', [DependencyController::class, 'store']);
+
+Route::controller(CommentController::class)->group(function () {
+    Route::post('/tasks/{task}/comments','store');
+    Route::put('/tasks/{task}/comments/{comment}','update');
+    Route::delete('/tasks/{task}/comments/{comment}','update');
+});
